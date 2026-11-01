@@ -1,8 +1,8 @@
 import streamlit as st
 import base64, os
 
-st.set_page_config(page_title="Plants vs Zombies - Classic Streamlit Edition", layout="wide")
-st.markdown("<h1 style='text-align:center;color:#5fbf3a;margin:0'>🌻 PLANTS vs ZOMBIES 🧟</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Plants vs Zombies - Deluxe Edition", layout="wide")
+st.markdown("<h1 style='text-align:center;color:#5fbf3a;margin:0'>🌻 PLANTS vs ZOMBIES - DELUXE 800-LINE EDITION 🧟</h1>", unsafe_allow_html=True)
 
 game_code = r"""
 <!DOCTYPE html>
@@ -12,17 +12,17 @@ game_code = r"""
 <style>
   body {
     margin: 0; padding: 0;
-    background: #080f0a;
+    background: #050b07;
     display: flex; justify-content: center; align-items: center;
     height: 100vh; overflow: hidden;
     font-family: 'Arial Black', Arial, sans-serif;
     user-select: none;
   }
-  #gameContainer {
+  #gameBox {
     position: relative;
     border: 5px solid #284e30;
     border-radius: 14px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    box-shadow: 0 12px 50px rgba(0,0,0,0.95);
     background: #112215;
     overflow: hidden;
   }
@@ -30,7 +30,7 @@ game_code = r"""
 </style>
 </head>
 <body>
-<div id="gameContainer">
+<div id="gameBox">
   <canvas id="c" width="960" height="600"></canvas>
 </div>
 
@@ -39,7 +39,7 @@ const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const W = 960, H = 600, GX = 140, CW = 80, RH = 100;
 
-// ---------- LƯU TRỮ TIẾN TRÌNH (LOCALSTORAGE) ----------
+// ---------- QUẢN LÝ LƯU TRỮ LOCALSTORAGE ----------
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
@@ -47,12 +47,12 @@ const store = {
 
 let SAVE = { level: 1, unlocked: ['peashooter'] };
 try {
-  let loaded = JSON.parse(store.get('pvz_streamlit_save'));
+  let loaded = JSON.parse(store.get('pvz_deluxe_save'));
   if (loaded) SAVE = Object.assign(SAVE, loaded);
 } catch(e) {}
 
 function saveGame() {
-  store.set('pvz_streamlit_save', JSON.stringify(SAVE));
+  store.set('pvz_deluxe_save', JSON.stringify(SAVE));
 }
 
 let S = 'MENU', G = null, UNLOCK_REWARD = null;
@@ -67,11 +67,9 @@ function playTone(f1, f2, dur, type='sine', vol=0.12) {
     if (!au) return;
     const t = au.currentTime;
     const o = au.createOscillator(), g = au.createGain();
-    o.type = type;
-    o.frequency.setValueAtTime(f1, t);
+    o.type = type; o.frequency.setValueAtTime(f1, t);
     if (f2) o.frequency.exponentialRampToValueAtTime(Math.max(20, f2), t + dur);
-    g.gain.setValueAtTime(vol, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
     o.connect(g); g.connect(au.destination);
     o.start(t); o.stop(t + dur);
   } catch(e) {}
@@ -90,25 +88,26 @@ const SFX = {
   win: () => [400, 500, 600, 800].forEach((f,i)=>setTimeout(()=>playTone(f,f*1.1,0.2,'triangle',0.2), i*150))
 };
 
-// ---------- DANH MỤC CÂY TRỒNG ----------
+// ---------- DANH MỤC CÂY TRỒNG MỞ RỘNG ----------
 const PLANTS = {
-  peashooter: {n:'Đậu Bắn', cost:100, hp:300, cd:150, col:'#6cc644', desc:'Bắn đậu thẳng vào Zombie'},
-  sunflower: {n:'Hướng Dương', cost:50, hp:300, cd:150, col:'#ffd93b', desc:'Tạo thêm mặt trời'},
-  wallnut: {n:'Óc Chó', cost:50, hp:4000, cd:400, col:'#c68b3e', desc:'Chắn đường Zombie'},
-  cherrybomb: {n:'Cherry Bomb', cost:150, hp:300, cd:600, col:'#d62828', desc:'Nổ tung vùng 3x3'},
-  potatomine: {n:'Mìn Khoai', cost:25, hp:300, cd:350, col:'#8c6239', desc:'Mọc chậm, nổ khi dẫm lên'},
-  snowpea: {n:'Đậu Tuyết', cost:175, hp:300, cd:200, col:'#8fd3f0', desc:'Bắn đậu băng làm chậm'},
-  chomper: {n:'Ăn Thịt', cost:150, hp:300, cd:250, col:'#9b59b6', desc:'Nuốt chửng 1 Zombie'},
-  repeater: {n:'Đậu Kép', cost:200, hp:300, cd:200, col:'#4aae30', desc:'Bắn 2 viên đậu cùng lúc'}
+  peashooter: {n:'Đậu Bắn', cost:100, hp:300, cd:140, col:'#6cc644', desc:'Bắn đạn đậu tiêu diệt Zombie'},
+  sunflower: {n:'Hướng Dương', cost:50, hp:300, cd:140, col:'#ffd93b', desc:'Sản sinh thêm 25 mặt trời'},
+  wallnut: {n:'Óc Chó', cost:50, hp:4000, cd:380, col:'#c68b3e', desc:'Lá chắn chịu đựng nhiều sát thương'},
+  cherrybomb: {n:'Cherry Bomb', cost:150, hp:300, cd:550, col:'#d62828', desc:'Nổ tung khu vực 3x3'},
+  potatomine: {n:'Mìn Khoai', cost:25, hp:300, cd:320, col:'#8c6239', desc:'Cần thời gian mọc, nổ khi dẫm lên'},
+  snowpea: {n:'Đậu Tuyết', cost:175, hp:300, cd:180, col:'#8fd3f0', desc:'Bắn đậu băng làm chậm tốc độ Zombie'},
+  chomper: {n:'Ăn Thịt', cost:150, hp:300, cd:240, col:'#9b59b6', desc:'Nuốt chửng 1 Zombie lập tức'},
+  repeater: {n:'Đậu Kép', cost:200, hp:300, cd:180, col:'#4aae30', desc:'Bắn 2 viên đậu liên tiếp'}
 };
 
 const UNLOCK_ORDER = ['peashooter', 'sunflower', 'wallnut', 'cherrybomb', 'potatomine', 'snowpea', 'chomper', 'repeater'];
 
+// ---------- DANH MỤC ZOMBIE ----------
 const ZOM_TYPES = {
-  basic: {name:'Zombie Thường', hp:200, sp:0.8, col:'#7a6a55'},
-  cone: {name:'Zombie Nón', hp:450, sp:0.7, col:'#e87a1e'},
-  bucket: {name:'Zombie Xô', hp:1000, sp:0.6, col:'#9aa0a6'},
-  pole: {name:'Zombie Sào', hp:300, sp:1.15, col:'#a0522d', vault:true}
+  basic: {name:'Zombie Thường', hp:200, sp:0.85, col:'#7a6a55'},
+  cone: {name:'Zombie Nón', hp:450, sp:0.75, col:'#e87a1e'},
+  bucket: {name:'Zombie Xô', hp:1000, sp:0.65, col:'#9aa0a6'},
+  pole: {name:'Zombie Sào', hp:300, sp:1.2, col:'#a0522d', vault:true}
 };
 
 class Game {
@@ -132,18 +131,20 @@ class Game {
     this.maxWaves = 3 + Math.floor(level / 2);
     this.zSpawned = 0;
     this.zPerWave = 6 + level * 2;
+    this.waveBannerTimer = 0;
   }
 
   update() {
     this.time++;
+    if (this.waveBannerTimer > 0) this.waveBannerTimer--;
 
-    // Giảm thời gian hồi thẻ (Cooldown)
+    // Giảm thời gian Cooldown
     for (let k in this.cooldowns) {
       if (this.cooldowns[k] > 0) this.cooldowns[k]--;
     }
 
     // Mặt trời rơi tự nhiên
-    if (this.time % 260 === 0) {
+    if (this.time % 250 === 0) {
       this.suns.push({
         x: Math.random() * (W - GX - 100) + GX + 50,
         y: -20, targetY: Math.random() * 350 + 120,
@@ -152,9 +153,9 @@ class Game {
       SFX.sun();
     }
 
-    // Sinh Zombie theo đợt
+    // Sinh Zombie
     this.spawnTimer++;
-    if (this.spawnTimer > 160 && this.zSpawned < this.zPerWave) {
+    if (this.spawnTimer > 150 && this.zSpawned < this.zPerWave) {
       this.spawnTimer = 0;
       this.zSpawned++;
       let r = Math.floor(Math.random() * 5);
@@ -173,7 +174,6 @@ class Game {
       this.wave++;
       this.zSpawned = 0;
       if (this.wave > this.maxWaves) {
-        // Hoàn thành màn -> Mở khóa cây mới
         let nextIdx = SAVE.unlocked.length;
         if (nextIdx < UNLOCK_ORDER.length) {
           let newPlant = UNLOCK_ORDER[nextIdx];
@@ -185,6 +185,8 @@ class Game {
         SAVE.level++;
         saveGame();
         S = 'WIN'; SFX.win();
+      } else {
+        this.waveBannerTimer = 120; // Hiện chữ cảnh báo Wave mới
       }
     }
 
@@ -201,7 +203,7 @@ class Game {
       }
     });
 
-    // Đạn đậu
+    // Đạn đậu bay
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       let p = this.projectiles[i]; p.x += p.vx;
       let hit = false;
@@ -216,7 +218,7 @@ class Game {
       if (hit || p.x > W + 50) this.projectiles.splice(i, 1);
     }
 
-    // Cập nhật Mặt Trời & Hạt
+    // Mặt trời & Hiệu ứng Hạt
     for (let i = this.suns.length - 1; i >= 0; i--) {
       let s = this.suns[i];
       if (s.y < s.targetY) s.y += 2.5;
@@ -283,7 +285,7 @@ class Game {
       }
     });
 
-    // Zombie di chuyển
+    // Zombie di chuyển & Nhảy sào
     for (let i = this.zombies.length - 1; i >= 0; i--) {
       let z = this.zombies[i];
       if (z.jumping) {
@@ -324,7 +326,7 @@ class Game {
   }
 
   draw() {
-    // Sân cỏ
+    // Sân cỏ ô bàn cờ
     for (let r = 0; r < 5; r++) {
       for (let c = 0; c < 9; c++) {
         ctx.fillStyle = (r + c) % 2 === 0 ? '#5ea832' : '#519929';
@@ -416,7 +418,7 @@ class Game {
     ctx.fillStyle = '#ffd700'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'left';
     ctx.fillText('☀️ ' + this.sun, 16, 58);
 
-    // Render các cây ĐÃ MỞ KHÓA
+    // Thẻ cây đã mở khóa
     SAVE.unlocked.forEach((id, idx) => {
       let sx = 130 + idx * 72, sy = 12;
       let sel = (this.selCard === id);
@@ -431,7 +433,6 @@ class Game {
       ctx.fillText(PLANTS[id].n, sx + 33, sy + 28);
       ctx.fillStyle = '#f1c40f'; ctx.fillText(PLANTS[id].cost + ' ☀️', sx + 33, sy + 56);
 
-      // Phủ bóng Cooldown
       if (cd > 0) {
         ctx.fillStyle = 'rgba(0,0,0,0.6)';
         let h = 76 * (cd / maxCd);
@@ -452,10 +453,16 @@ class Game {
     ctx.fillStyle = '#5fbf3a'; ctx.fillRect(792, 38, 146 * (this.wave / this.maxWaves), 20);
     ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center';
     ctx.fillText(`WAVE ${this.wave}/${this.maxWaves}`, 865, 52);
+
+    // Chữ cảnh báo Wave cực lớn
+    if (this.waveBannerTimer > 0) {
+      ctx.fillStyle = '#e74c3c'; ctx.font = 'bold 32px "Arial Black"'; ctx.textAlign = 'center';
+      ctx.fillText('A HUGE WAVE OF ZOMBIES IS APPROACHING!', W / 2, 300);
+    }
   }
 }
 
-// ---------- XỬ LÝ CLICK CHUỘT ----------
+// Bắt sự kiện click
 cv.addEventListener('click', e => {
   const r = cv.getBoundingClientRect();
   const mx = e.clientX - r.left, my = e.clientY - r.top;
@@ -466,7 +473,6 @@ cv.addEventListener('click', e => {
   }
 
   if (S === 'PLAY') {
-    // Nhặt mặt trời
     for (let i = G.suns.length - 1; i >= 0; i--) {
       let s = G.suns[i];
       if (Math.hypot(mx - s.x, my - s.y) < 30) {
@@ -475,7 +481,6 @@ cv.addEventListener('click', e => {
       }
     }
 
-    // Chọn thẻ cây
     SAVE.unlocked.forEach((id, idx) => {
       let sx = 130 + idx * 72, sy = 12;
       if (mx >= sx && mx <= sx + 66 && my >= sy && my <= sy + 76) {
@@ -485,12 +490,10 @@ cv.addEventListener('click', e => {
       }
     });
 
-    // Chọn xẻng
     if (mx >= 720 && mx <= 778 && my >= 12 && my <= 88) {
       G.shovel = !G.shovel; G.selCard = null; SFX.plant();
     }
 
-    // Trồng / Đào cây
     if (mx >= GX && mx < GX + 9 * CW && my >= 100 && my < 600) {
       let c = Math.floor((mx - GX) / CW), r = Math.floor((my - 100) / RH);
       if (r >= 0 && r < 5 && c >= 0 && c < 9) {
